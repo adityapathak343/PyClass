@@ -1,13 +1,17 @@
 from tkinter import *
 from tkinter.font import Font
+from tkinter import filedialog
 import emailhandler
 import filehandler
 import mysql.connector as mc
 
 
-con = mc.connect(host='localhost', user='root', password='1234', database='logininfo')
+con = mc.connect(host='localhost', user='root', password='1234', database='')
 cursor = con.cursor()
+cursor.execute('Create database if not exists logininfo;')
+cursor.execute('Use logininfo;')
 
+ContactInfo = ()
 RegisterVar = False
 login_status = False
 ClientName = ''
@@ -53,7 +57,7 @@ def getinfo(event):
     name_label.configure(font=register_nfont)
     print('data submissions successful')
     submit_button = Button(register_window, text='Register')
-    submit_button.bind('<Button-1>', lambda eff: register(username_entry, password_entry, name_entry, email_entry, eff))
+    submit_button.bind('<Button-1>', lambda lam_var: register(username_entry, password_entry, name_entry, email_entry))
     submit_button.grid(row=7, column=1)
     if RegisterVar:
         register_window.destroy()
@@ -62,8 +66,9 @@ def getinfo(event):
     register_window.mainloop()
 
 
-def register(eusername, epassword, ename, eemail, eff=None,):
+def register(eusername, epassword, ename, eemail, lam_var=None,):
     global RegisterVar
+    print(lam_var)
     uid = eusername.get()
     pwd = epassword.get()
     name = ename.get()
@@ -124,13 +129,14 @@ def send(event):
     send_info_label.configure(font=send_nfont)
     send_window.mainloop()
 
+
 def view(event):
     root.destroy()
     view_window = Tk(screenName='ViewWindow')
     view_hfont = Font(root=view_window, family='product sans bold', size=18)
     view_nfont = Font(root=view_window, family='product sans', size=10)
     view_head_label = Label(view_window, text="Here's your stuff!")
-    view_head_label.grid(row=1, column=1)
+    view_head_label.grid(row=1, column=0)
     view_head_label.configure(font=view_hfont)
     view_info_label = Label(view_window, text='Files you have received through the PyClass interface')
     view_info_label.grid(row=2, column=1)
@@ -177,8 +183,11 @@ else:
 root = Tk(screenName='interface')
 HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)
-con2 = mc.connect(host='localhost', user='root', password='1234', database='contact_info')
-WelcomeLabel = Label(root, text='Welcome Back '+ClientName+'!')
+con2 = mc.connect(host='localhost', user='root', password='1234', database='')
+cursor = con2.cursor()
+cursor.execute('Create database if not exists '+username+'_contact_info;')
+cursor.execute('Use '+username+'_contact_info;')
+WelcomeLabel = Label(root, text='Welcome Back '+username+'!')
 WelcomeLabel.pack()
 WelcomeLabel.configure(font=HeadingFont)
 SendButton = Button(root, text='Send Files')
