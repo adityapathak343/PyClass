@@ -31,7 +31,7 @@ def getinfo(event):
     global RegisterVar
     register_window = Tk(screenName='RegisterWindow')
     register_hfont = Font(root=register_window, family='product sans bold', size=18)
-    register_nfont = Font(root=register_window, family='product sans', size=10)
+    register_n_font = Font(root=register_window, family='product sans', size=10)
     head_label = Label(register_window, text='Welcome!')
     head_label.grid(row=0)
     head_label.configure(font=register_hfont)
@@ -39,34 +39,30 @@ def getinfo(event):
     user_label.grid(row=2)
     username_entry = Entry(register_window)
     username_entry.grid(row=2, column=2)
-    user_label.configure(font=register_nfont)
+    user_label.configure(font=register_n_font)
     pass_label = Label(register_window, text='Password ')
     pass_label.grid(row=3)
     password_entry = Entry(register_window)
     password_entry.grid(row=3, column=2)
-    pass_label.configure(font=register_nfont)
+    pass_label.configure(font=register_n_font)
     email_label = Label(register_window, text='Email ')
     email_label.grid(row=4)
     email_entry = Entry(register_window)
     email_entry.grid(row=4, column=2)
-    email_label.configure(font=register_nfont)
+    email_label.configure(font=register_n_font)
     name_label = Label(register_window, text='Name ')
     name_label.grid(row=5)
     name_entry = Entry(register_window)
     name_entry.grid(row=5, column=2)
-    name_label.configure(font=register_nfont)
+    name_label.configure(font=register_n_font)
     print('data submissions successful')
     submit_button = Button(register_window, text='Register')
-    submit_button.bind('<Button-1>', lambda lam_var: register(username_entry, password_entry, name_entry, email_entry))
+    submit_button.bind('<Button-1>', lambda lam_var: register(register_window, username_entry, password_entry, name_entry, email_entry))
     submit_button.grid(row=7, column=1)
-    if RegisterVar:
-        register_window.destroy()
-    else:
-        pass
     register_window.mainloop()
 
 
-def register(eusername, epassword, ename, eemail, lam_var=None,):
+def register(window, eusername, epassword, ename, eemail, lam_var=None,):
     global RegisterVar
     print(lam_var)
     uid = eusername.get()
@@ -78,6 +74,8 @@ def register(eusername, epassword, ename, eemail, lam_var=None,):
     cursor.execute(register_command)
     con.commit()
     RegisterVar = True
+    if RegisterVar:
+        window.destroy()
     print('Registration Successful!')
     return True
 
@@ -116,17 +114,66 @@ def login_message(event):
         return False
 
 
+def add_contact_to_list(event):
+    add_window = Tk(screenName='AddWindow')
+    add_hfont = Font(root=add_window, family='product sans bold', size=18)
+    add_n_font = Font(root=add_window, family='product sans', size=10)
+    head_label = Label(add_window, text='Add contact')
+    head_label.grid(row=0)
+    head_label.configure(font=add_hfont)
+    contact_name_label = Label(add_window, text='Name ')
+    contact_name_label.grid(row=3)
+    contact_name_entry = Entry(add_window)
+    contact_name_entry.grid(row=3, column=2)
+    contact_name_label.configure(font=add_n_font)
+    contact_email_label = Label(add_window, text='Email ')
+    contact_email_label.grid(row=4)
+    contact_email_entry = Entry(add_window)
+    contact_email_entry.grid(row=4, column=2)
+    contact_email_label.configure(font=add_n_font)
+    submit_button = Button(add_window, text='Register')
+    submit_button.bind('<Button-1>', lambda lam_var: add_contact(add_window, contact_name_entry, contact_email_entry))
+    submit_button.grid(row=7, column=1)
+    add_window.mainloop()
+
+
+def add_contact(window, e_name, e_email):
+    global username
+    name = e_name.get()
+    email = e_email.get()
+    command = 'insert into ' + username + '_contact_info values({}, {})'.format('"' + name + '"', '"' + email + '"')
+    cursor.execute(command)
+    con2.commit()
+    window.destroy()
+
+
 def send(event):
     root.destroy()
+    contact_list = []
     send_window = Tk(screenName='SendWindow')
     send_hfont = Font(root=send_window, family='product sans bold', size=18)
-    send_nfont = Font(root=send_window, family='product sans', size=10)
+    send_n_font = Font(root=send_window, family='product sans', size=10)
     send_head_label = Label(send_window, text='Choose your audience:')
-    send_head_label.grid(row=1, column=1)
+    send_head_label.grid(row=1)
     send_head_label.configure(font=send_hfont)
     send_info_label = Label(send_window, text='Your message will be received only by the following recipients')
-    send_info_label.grid(row=2, column=1)
-    send_info_label.configure(font=send_nfont)
+    send_info_label.grid(row=2)
+    send_info_label.configure(font=send_n_font)
+    cursor.execute('select email from ' + username + '_contact_info;')
+    contact_data = cursor.fetchall()
+    check_no = 1
+    current_line = 4
+    var_count = 0
+    for tup in contact_data:
+        contact_list.append(tup[0])
+    for email in contact_list:
+        exec('checkbox' + str(check_no) + ' = Checkbutton(send_window, cursor="dot", text=" ' + email + ' ")')
+        exec('checkbox' + str(check_no) + '.grid(row=' + str(current_line) + ')')
+        exec('checkbox' + str(check_no) + '.configure(font=send_n_font)')
+        check_no += 1
+        current_line += 1
+        var_count += 1
+
     send_window.mainloop()
 
 
@@ -134,13 +181,13 @@ def view(event):
     root.destroy()
     view_window = Tk(screenName='ViewWindow')
     view_hfont = Font(root=view_window, family='product sans bold', size=18)
-    view_nfont = Font(root=view_window, family='product sans', size=10)
+    view_n_font = Font(root=view_window, family='product sans', size=10)
     view_head_label = Label(view_window, text="Here's your stuff!")
     view_head_label.grid(row=1, column=0)
     view_head_label.configure(font=view_hfont)
     view_info_label = Label(view_window, text='Files you have received through the PyClass interface')
     view_info_label.grid(row=2, column=1)
-    view_info_label.configure(font=view_nfont)
+    view_info_label.configure(font=view_n_font)
     view_window.mainloop()
 
 
@@ -185,9 +232,11 @@ HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)
 con2 = mc.connect(host='localhost', user='root', password='1234', database='')
 cursor = con2.cursor()
-cursor.execute('Create database if not exists '+username+'_contact_info;')
+cursor.execute('Create database if not exists ' + username + '_contact_info;')
 cursor.execute('Use '+username+'_contact_info;')
-WelcomeLabel = Label(root, text='Welcome Back '+username+'!')
+cursor.execute('create table if not exists '
+               + username + '_contact_info (name varchar(30) not null, email varchar(80) primary key);')
+WelcomeLabel = Label(root, text='Welcome Back ' + ClientName + '!')
 WelcomeLabel.pack()
 WelcomeLabel.configure(font=HeadingFont)
 SendButton = Button(root, text='Send Files')
@@ -198,4 +247,8 @@ ViewButton = Button(root, text='View Files')
 ViewButton.pack()
 ViewButton.bind('<Button-1>', view)
 ViewButton.configure(font=NormalFont)
+AddContactButton = Button(root, text='Add Contact')
+AddContactButton.pack()
+AddContactButton.bind('<Button-1>', add_contact_to_list)
+AddContactButton.configure(font=NormalFont)
 root.mainloop()
