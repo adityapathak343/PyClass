@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4523e1bc-446d-438b-9e30-5474a31c5dd1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyclassinterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyclassinterface.py" afterDir="false" />
-    </list>
+    <list default="true" id="4523e1bc-446d-438b-9e30-5474a31c5dd1" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pyclassinterface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="245" column="15" selection-start-line="245" selection-start-column="15" selection-end-line="245" selection-end-column="15" />
+            <state relative-caret-position="379">
+              <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -186,6 +183,14 @@
       <option name="presentableId" value="Default" />
       <updated>1558022350215</updated>
     </task>
+    <task id="LOCAL-00001" summary="Modified &quot;Send&quot; window">
+      <created>1559273710648</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1559273710648</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -211,6 +216,10 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Modified &quot;Send&quot; window" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified &quot;Send&quot; window" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/__init.py__.py" />
     <entry file="file://$PROJECT_DIR$/pyclass.py" />
@@ -224,8 +233,8 @@
     <entry file="file://$PROJECT_DIR$/venv/tests.py" />
     <entry file="file://$PROJECT_DIR$/pyclassinterface.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="245" column="15" selection-start-line="245" selection-start-column="15" selection-end-line="245" selection-end-column="15" />
+        <state relative-caret-position="379">
+          <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
