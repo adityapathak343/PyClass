@@ -150,6 +150,7 @@ def add_contact(window, e_name, e_email):
 def send(event):
     root.destroy()
     contact_list = []
+    recipient_tuple = ()
     send_window = Tk(screenName='SendWindow')
     send_hfont = Font(root=send_window, family='product sans bold', size=18)
     send_n_font = Font(root=send_window, family='product sans', size=10)
@@ -166,16 +167,38 @@ def send(event):
     var_count = 0
     for tup in contact_data:
         contact_list.append(tup[0])
+
     for email in contact_list:
         exec('checkbox' + str(check_no) + ' = Checkbutton(send_window, cursor="dot", text=" ' + email + ' ")')
         exec('checkbox' + str(check_no) + '.grid(row=' + str(current_line) + ')')
         exec('checkbox' + str(check_no) + '.configure(font=send_n_font)')
+        exec('recipient_tuple.append(checkbox' + str(check_no) + ')')
         check_no += 1
         current_line += 1
         var_count += 1
 
+    submit_button = Button(send_window, text='')
+    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(recipient_tuple))
+    submit_button.grid(row=7, column=1)
     send_window.mainloop()
 
+
+def get_recipients(recipients):
+    receivers = ()
+    for checkbutton in recipients:
+        if checkbutton.variable == 1:
+            receivers.append(checkbutton.text)
+    get_files(receivers)
+
+
+def get_files(recipients):
+    files = ()
+    file_prompt_window = Tk(screenName='file_prompt_window')
+    fil_prompt_hfont = Font(root=file_prompt_window, family='product sans bold', size=18)
+    file_prompt_n_font = Font(root=file_prompt_window, family='product sans', size=10)
+    file_prompt_head_label = Label(file_prompt_window, text='Choose your files:')
+    submit_button = Button(file_prompt_window, text='Register')
+    submit_button.bind('<Button-1>', filedialog.askdirectory)
 
 def view(event):
     root.destroy()
@@ -225,8 +248,8 @@ else:
     raise SystemExit
 # ----End of Login Section---- #
 
-# ----Main Stuff---- #
 
+# ----Main Stuff---- #
 root = Tk(screenName='interface')
 HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)

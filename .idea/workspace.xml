@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4523e1bc-446d-438b-9e30-5474a31c5dd1" name="Default Changelist" comment="" />
+    <list default="true" id="4523e1bc-446d-438b-9e30-5474a31c5dd1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emailhandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/emailhandler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyclassinterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyclassinterface.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pyclassinterface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
+            <state relative-caret-position="274">
+              <caret line="179" column="46" selection-start-line="179" selection-start-column="46" selection-end-line="179" selection-end-column="46" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -25,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/emailhandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            <state relative-caret-position="102">
+              <caret line="6" column="23" lean-forward="true" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -58,6 +62,7 @@
       <find>register</find>
       <find>register_</find>
       <find>nfont</find>
+      <find>send</find>
     </findStrings>
     <replaceStrings>
       <replace>root</replace>
@@ -67,6 +72,8 @@
       <replace>add</replace>
       <replace>add_</replace>
       <replace>n_font</replace>
+      <replace>fil_prompt</replace>
+      <replace>file_prompt</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -78,8 +85,8 @@
         <option value="$PROJECT_DIR$/__init.py__.py" />
         <option value="$PROJECT_DIR$/pyclass.py" />
         <option value="$PROJECT_DIR$/filehandler.py" />
-        <option value="$PROJECT_DIR$/emailhandler.py" />
         <option value="$PROJECT_DIR$/venv/tests.py" />
+        <option value="$PROJECT_DIR$/emailhandler.py" />
         <option value="$PROJECT_DIR$/pyclassinterface.py" />
       </list>
     </option>
@@ -190,14 +197,21 @@
       <option name="project" value="LOCAL" />
       <updated>1559273710648</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Modified &quot;Send&quot; window">
+      <created>1559273771766</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1559273771766</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23065476" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23065476" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -216,6 +230,32 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Modified &quot;Send&quot; window" />
     <option name="LAST_COMMIT_MESSAGE" value="Modified &quot;Send&quot; window" />
@@ -231,27 +271,27 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/venv/tests.py" />
-    <entry file="file://$PROJECT_DIR$/pyclassinterface.py">
+    <entry file="file://$PROJECT_DIR$/filehandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="3" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/emailhandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        <state relative-caret-position="102">
+          <caret line="6" column="23" lean-forward="true" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/filehandler.py">
+    <entry file="file://$PROJECT_DIR$/pyclassinterface.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="3" selection-end-column="7" />
+        <state relative-caret-position="274">
+          <caret line="179" column="46" selection-start-line="179" selection-start-column="46" selection-end-line="179" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
