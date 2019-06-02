@@ -11,12 +11,14 @@ cursor = con.cursor()
 cursor.execute('Create database if not exists logininfo;')
 cursor.execute('Use logininfo;')
 
+folder_path = ''
 ContactInfo = ()
 RegisterVar = False
 login_status = False
 ClientName = ''
 username = ''
 password = ''
+file_count_var = 0
 
 if con.is_connected():
     pass
@@ -172,18 +174,19 @@ def send(event):
         exec('checkbox' + str(check_no) + ' = Checkbutton(send_window, cursor="dot", text=" ' + email + ' ")')
         exec('checkbox' + str(check_no) + '.grid(row=' + str(current_line) + ')')
         exec('checkbox' + str(check_no) + '.configure(font=send_n_font)')
-        exec('recipient_tuple.append(checkbox' + str(check_no) + ')')
+        exec('recipient_tuple += (checkbox' + str(check_no) + ',)')
         check_no += 1
         current_line += 1
         var_count += 1
 
-    submit_button = Button(send_window, text='')
-    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(recipient_tuple))
+    submit_button = Button(send_window, text='Select Files')
+    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(window, recipient_tuple))
     submit_button.grid(row=7, column=1)
     send_window.mainloop()
 
 
-def get_recipients(recipients):
+def get_recipients(window, recipients):
+    window.destroy()
     receivers = ()
     for checkbutton in recipients:
         if checkbutton.variable == 1:
@@ -192,13 +195,34 @@ def get_recipients(recipients):
 
 
 def get_files(recipients):
+    global file_count_var
+    global folder_path
     files = ()
     file_prompt_window = Tk(screenName='file_prompt_window')
-    fil_prompt_hfont = Font(root=file_prompt_window, family='product sans bold', size=18)
+    file_prompt_hfont = Font(root=file_prompt_window, family='product sans bold', size=18)
     file_prompt_n_font = Font(root=file_prompt_window, family='product sans', size=10)
     file_prompt_head_label = Label(file_prompt_window, text='Choose your files:')
-    submit_button = Button(file_prompt_window, text='Register')
-    submit_button.bind('<Button-1>', filedialog.askdirectory)
+    file_prompt_head_label.grid(row=0)
+    file_prompt_head_label.configure(font=file_prompt_hfont)
+    submit_button = Button(file_prompt_window, text='Select Files')
+    submit_button.grid(row=2)
+    submit_button.bind('<Button-1>', lambda lam_var: open_file_window(files))
+    submit_button.configure(font=file_prompt_n_font)
+    counter_label = Label(file_prompt_window, textvariable='(' + str(file_count_var) + ') files selected')
+    counter_label.grid(row=4)
+    counter_label.configure(font=file_prompt_n_font)
+    file_prompt_window.mainloop()
+
+
+def open_file_window(files):
+    global file_count_var
+    global folder_path
+    filename = filedialog.askopenfilename(initialdir="/", title="Select file")
+    files += (filename,)
+    print(files)
+    if filename != '':
+        file_count_var += 1
+
 
 def view(event):
     root.destroy()
