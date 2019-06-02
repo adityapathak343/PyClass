@@ -12,6 +12,7 @@ cursor.execute('Create database if not exists logininfo;')
 cursor.execute('Use logininfo;')
 
 folder_path = ''
+files_to_send = ()
 ContactInfo = ()
 RegisterVar = False
 login_status = False
@@ -59,7 +60,8 @@ def getinfo(event):
     name_label.configure(font=register_n_font)
     print('data submissions successful')
     submit_button = Button(register_window, text='Register')
-    submit_button.bind('<Button-1>', lambda lam_var: register(register_window, username_entry, password_entry, name_entry, email_entry))
+    submit_button.bind('<Button-1>', lambda lam_var: register(register_window, username_entry, password_entry,
+                                                              name_entry, email_entry))
     submit_button.grid(row=7, column=1)
     register_window.mainloop()
 
@@ -72,7 +74,8 @@ def register(window, eusername, epassword, ename, eemail, lam_var=None,):
     name = ename.get()
     email = eemail.get()
     print('function called')
-    register_command = 'insert into logininfo values({}, {}, {}, {});'.format('"'+uid+'"', '"'+pwd+'"', '"'+name+'"', '"'+email+'"')
+    register_command = 'insert into logininfo values({}, {}, {}, {});'.format('"' + uid + '"', '"' + pwd + '"', '"'
+                                                                              + name + '"', '"' + email + '"')
     cursor.execute(register_command)
     con.commit()
     RegisterVar = True
@@ -95,9 +98,9 @@ def login(uid, pwd):
         correct_password = data[0]
         ClientName = data[1]
         if correct_password == pwd:
-           return True
+            return True
         else:
-           return False
+            return False
     except TypeError:
         print('Incorrect UserId')
         return False
@@ -180,7 +183,7 @@ def send(event):
         var_count += 1
 
     submit_button = Button(send_window, text='Select Files')
-    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(window, recipient_tuple))
+    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(send_window, recipient_tuple))
     submit_button.grid(row=7, column=1)
     send_window.mainloop()
 
@@ -190,14 +193,14 @@ def get_recipients(window, recipients):
     receivers = ()
     for checkbutton in recipients:
         if checkbutton.variable == 1:
-            receivers.append(checkbutton.text)
+            receivers += (checkbutton.text,)
     get_files(receivers)
 
 
 def get_files(recipients):
     global file_count_var
     global folder_path
-    files = ()
+    global files_to_send
     file_prompt_window = Tk(screenName='file_prompt_window')
     file_prompt_hfont = Font(root=file_prompt_window, family='product sans bold', size=18)
     file_prompt_n_font = Font(root=file_prompt_window, family='product sans', size=10)
@@ -206,22 +209,34 @@ def get_files(recipients):
     file_prompt_head_label.configure(font=file_prompt_hfont)
     submit_button = Button(file_prompt_window, text='Select Files')
     submit_button.grid(row=2)
-    submit_button.bind('<Button-1>', lambda lam_var: open_file_window(files))
+    submit_button.bind('<Button-1>', lambda lam_var: open_file_window())
     submit_button.configure(font=file_prompt_n_font)
     counter_label = Label(file_prompt_window, textvariable='(' + str(file_count_var) + ') files selected')
     counter_label.grid(row=4)
     counter_label.configure(font=file_prompt_n_font)
+    proceed_button = Button(file_prompt_window, text='Proceed')
+    proceed_button.grid(row=2, column=2)
+    proceed_button.bind('<Button-1>', lambda lam_var: send_mail(file_prompt_window, recipients, files_to_send))
+    proceed_button.configure(font=file_prompt_n_font)
     file_prompt_window.mainloop()
 
 
-def open_file_window(files):
+def open_file_window():
     global file_count_var
     global folder_path
+    global files_to_send
     filename = filedialog.askopenfilename(initialdir="/", title="Select file")
-    files += (filename,)
-    print(files)
+    files_to_send += (filename,)
     if filename != '':
         file_count_var += 1
+
+
+def send_mail(window, recipients, files):
+    global ClientName
+    print(recipients)
+    files = list(files)
+    emailhandler.sendmail(ClientName, recipients, files)
+    window.destroy()
 
 
 def view(event):
