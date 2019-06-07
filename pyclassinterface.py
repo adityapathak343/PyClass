@@ -1,16 +1,18 @@
-from tkinter import *
+from tkinter import * #importing entire tkinter library
+#other rando imports
 from tkinter.font import Font
 from tkinter import filedialog
 import emailhandler
 import filehandler
 import mysql.connector as mc
 
-
+#establishing sql connection for login
 con = mc.connect(host='localhost', user='root', password='1234', database='')
 cursor = con.cursor()
 cursor.execute('Create database if not exists logininfo;')
 cursor.execute('Use logininfo;')
 
+#defining random variables that I was too lazy to work around
 folder_path = ''
 files_to_send = ()
 ContactInfo = ()
@@ -21,16 +23,19 @@ username = ''
 password = ''
 file_count_var = 0
 
+#checking sql connection
 if con.is_connected():
     pass
 else:
     print('Error Establishing Connection!')
 
+#initializing both modules
 emailhandler.__init__()
 filehandler.__init__()
 
 
 def getinfo(event):
+    '''Starts a new window to collect registration information'''
     global RegisterVar
     register_window = Tk(screenName='RegisterWindow')
     register_hfont = Font(root=register_window, family='product sans bold', size=18)
@@ -61,12 +66,13 @@ def getinfo(event):
     print('data submissions successful')
     submit_button = Button(register_window, text='Register')
     submit_button.bind('<Button-1>', lambda lam_var: register(register_window, username_entry, password_entry,
-                                                              name_entry, email_entry))
+                                                              name_entry, email_entry)) #sends data to register fuunction
     submit_button.grid(row=7, column=1)
     register_window.mainloop()
 
 
 def register(window, eusername, epassword, ename, eemail, lam_var=None,):
+    '''Registers user credentials in universal login database'''
     global RegisterVar
     print(lam_var)
     uid = eusername.get()
@@ -86,6 +92,7 @@ def register(window, eusername, epassword, ename, eemail, lam_var=None,):
 
 
 def login(uid, pwd):
+    '''Verifies Login information'''
     global ClientName
     try:
         login_command = '''
@@ -107,6 +114,7 @@ def login(uid, pwd):
 
 
 def login_message(event):
+    '''Receives and parses login credentials entered by user'''
     global login_status
     global username
     global password
@@ -120,6 +128,7 @@ def login_message(event):
 
 
 def add_contact_to_list(event):
+    '''Pops up a window to get new contact details to add to the user's database'''
     add_window = Tk(screenName='AddWindow')
     add_hfont = Font(root=add_window, family='product sans bold', size=18)
     add_n_font = Font(root=add_window, family='product sans', size=10)
@@ -143,6 +152,7 @@ def add_contact_to_list(event):
 
 
 def add_contact(window, e_name, e_email):
+    '''Adds the contact to the sql database'''
     global username
     name = e_name.get()
     email = e_email.get()
@@ -153,9 +163,11 @@ def add_contact(window, e_name, e_email):
 
 
 def send(event):
+    '''Opens a prompt for the user to select which of his contacts he needs to send the emails to'''
     root.destroy()
     contact_list = []
-    recipient_tuple = ()
+    emails = []
+    variables = []
     send_window = Tk(screenName='SendWindow')
     send_hfont = Font(root=send_window, family='product sans bold', size=18)
     send_n_font = Font(root=send_window, family='product sans', size=10)
@@ -165,39 +177,48 @@ def send(event):
     send_info_label = Label(send_window, text='Your message will be received only by the following recipients')
     send_info_label.grid(row=2)
     send_info_label.configure(font=send_n_font)
-    cursor.execute('select email from ' + username + '_contact_info;')
+    cursor.execute('select email from ' + username + '_contact_info;')  #getting all the users emails email information
     contact_data = cursor.fetchall()
-    check_no = 1
+    check_no = 0
     current_line = 4
     var_count = 0
+    checkboxes = []
     for tup in contact_data:
         contact_list.append(tup[0])
 
     for email in contact_list:
-        exec('checkbox' + str(check_no) + ' = Checkbutton(send_window, cursor="dot", text=" ' + email + ' ")')
-        exec('checkbox' + str(check_no) + '.grid(row=' + str(current_line) + ')')
-        exec('checkbox' + str(check_no) + '.configure(font=send_n_font)')
-        exec('recipient_tuple += (checkbox' + str(check_no) + ',)')
+        #Creating a checkbox each for every contact for the user to select which contacts to send emails to
+        var = BooleanVar()
+        checkboxes.append(Checkbutton(send_window, cursor="dot", variable=var, text=email))
+        checkboxes[check_no].grid(row=current_line)
+        checkboxes[check_no].configure(font=send_n_font)
+        emails.append(email)
+        variables.append(var)   #storing a corresponding boolean with each checkbox that returns true if the box is selected
         check_no += 1
         current_line += 1
         var_count += 1
 
     submit_button = Button(send_window, text='Select Files')
-    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(send_window, recipient_tuple))
+    submit_button.bind('<Button-1>', lambda lam_var: get_recipients(send_window, emails, variables))
     submit_button.grid(row=7, column=1)
     send_window.mainloop()
 
 
-def get_recipients(window, recipients):
+def get_recipients(window, recipients, variables):
+    '''Checks which checkboxes have True values associated whith them'''
+    print(recipients)
+    receivers = []
+    for var in variables:
+        if var.get():
+            email = recipients[variables.index(var)]
+            receivers.append(email)
+    get_files(window, receivers)
+
+
+def get_files(window, recipients):
+    '''Opens up new window with a button to open a file prompt'''
     window.destroy()
-    receivers = ()
-    for checkbutton in recipients:
-        if checkbutton.variable == 1:
-            receivers += (checkbutton.text,)
-    get_files(receivers)
-
-
-def get_files(recipients):
+    print(recipients)
     global file_count_var
     global folder_path
     global files_to_send
@@ -222,6 +243,7 @@ def get_files(recipients):
 
 
 def open_file_window():
+    #opens a file prompt
     global file_count_var
     global folder_path
     global files_to_send
@@ -232,6 +254,7 @@ def open_file_window():
 
 
 def send_mail(window, recipients, files):
+    #gets the files and confirmed recipients and sends mail using email handleer module
     global ClientName
     print(recipients)
     files = list(files)
@@ -239,7 +262,7 @@ def send_mail(window, recipients, files):
     window.destroy()
 
 
-def view(event):
+'''def view(event):
     root.destroy()
     view_window = Tk(screenName='ViewWindow')
     view_hfont = Font(root=view_window, family='product sans bold', size=18)
@@ -250,7 +273,7 @@ def view(event):
     view_info_label = Label(view_window, text='Files you have received through the PyClass interface')
     view_info_label.grid(row=2, column=1)
     view_info_label.configure(font=view_n_font)
-    view_window.mainloop()
+    view_window.mainloop()'''
 
 
 # ----Login Section---- #
@@ -294,10 +317,10 @@ HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)
 con2 = mc.connect(host='localhost', user='root', password='1234', database='')
 cursor = con2.cursor()
-cursor.execute('Create database if not exists ' + username + '_contact_info;')
+cursor.execute('Create database if not exists ' + username + '_contact_info;')  #creating a new database for the user to store contacts
 cursor.execute('Use '+username+'_contact_info;')
 cursor.execute('create table if not exists '
-               + username + '_contact_info (name varchar(30) not null, email varchar(80) primary key);')
+               + username + '_contact_info (name varchar(30) not null, email varchar(80) primary key);')    #new table
 WelcomeLabel = Label(root, text='Welcome Back ' + ClientName + '!')
 WelcomeLabel.pack()
 WelcomeLabel.configure(font=HeadingFont)
@@ -305,10 +328,10 @@ SendButton = Button(root, text='Send Files')
 SendButton.pack()
 SendButton.bind('<Button-1>', send)
 SendButton.configure(font=NormalFont)
-ViewButton = Button(root, text='View Files')
+'''ViewButton = Button(root, text='View Files')
 ViewButton.pack()
 ViewButton.bind('<Button-1>', view)
-ViewButton.configure(font=NormalFont)
+ViewButton.configure(font=NormalFont)'''
 AddContactButton = Button(root, text='Add Contact')
 AddContactButton.pack()
 AddContactButton.bind('<Button-1>', add_contact_to_list)

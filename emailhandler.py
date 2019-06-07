@@ -1,5 +1,5 @@
 import yagmail
-yag = yagmail.SMTP('adityapathak343@gmail.com')
+yag = yagmail.SMTP('pyclassinterface@gmail.com')
 
 
 def __init__():
@@ -10,6 +10,9 @@ def __init__():
 
 
 def sendmail(sender, mailing_list, files_to_attach):
-    yag.send(to=mailing_list, contents='Hello, from PyClass. ' + sender + 'from PyClass has sent you the attached.'
-                                                                              + 'Happy Learning!\n'
+    yag.send(to=mailing_list, subject="You've got Mail!", 
+             contents='Hello, from PyClass.\n' + sender + ' from PyClass has sent you the attached. \n'
+                                                                              + 'Happy Learning!\n This is an automatically generated mail. The sender does not support replies.'
                                                                                 , attachments=files_to_attach)
+    print('Success')
+    return True
