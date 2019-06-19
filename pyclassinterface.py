@@ -27,7 +27,7 @@ file_count_var = 0
 if con.is_connected():
     pass
 else:
-    print('Error Establishing Connection!')
+    print('debug@PyClassInterface: Error Establishing Connection!')
 
 #initializing both modules
 emailhandler.__init__()
@@ -38,6 +38,8 @@ def getinfo(event):
     '''Starts a new window to collect registration information'''
     global RegisterVar
     register_window = Tk(screenName='RegisterWindow')
+    register_window.wm_iconbitmap('icon.ico')
+    register_window.wm_title('Register')
     register_hfont = Font(root=register_window, family='product sans bold', size=18)
     register_n_font = Font(root=register_window, family='product sans', size=10)
     head_label = Label(register_window, text='Welcome!')
@@ -63,7 +65,7 @@ def getinfo(event):
     name_entry = Entry(register_window)
     name_entry.grid(row=5, column=2)
     name_label.configure(font=register_n_font)
-    print('data submissions successful')
+    print('debug@PyClassInterface: data submissions successful')
     submit_button = Button(register_window, text='Register')
     submit_button.bind('<Button-1>', lambda lam_var: register(register_window, username_entry, password_entry,
                                                               name_entry, email_entry)) #sends data to register fuunction
@@ -79,7 +81,7 @@ def register(window, eusername, epassword, ename, eemail, lam_var=None,):
     pwd = epassword.get()
     name = ename.get()
     email = eemail.get()
-    print('function called')
+    print('debug@PyClassInterface: function called')
     register_command = 'insert into logininfo values({}, {}, {}, {});'.format('"' + uid + '"', '"' + pwd + '"', '"'
                                                                               + name + '"', '"' + email + '"')
     cursor.execute(register_command)
@@ -87,7 +89,7 @@ def register(window, eusername, epassword, ename, eemail, lam_var=None,):
     RegisterVar = True
     if RegisterVar:
         window.destroy()
-    print('Registration Successful!')
+    print('debug@PyClassInterface: Registration Successful!')
     return True
 
 
@@ -109,7 +111,7 @@ def login(uid, pwd):
         else:
             return False
     except TypeError:
-        print('Incorrect UserId')
+        print('debug@PyClassInterface: Incorrect UserId')
         return False
 
 
@@ -130,6 +132,8 @@ def login_message(event):
 def add_contact_to_list(event):
     '''Pops up a window to get new contact details to add to the user's database'''
     add_window = Tk(screenName='AddWindow')
+    add_window.wm_iconbitmap('icon.ico')
+    add_window.wm_title('Add Contact')
     add_hfont = Font(root=add_window, family='product sans bold', size=18)
     add_n_font = Font(root=add_window, family='product sans', size=10)
     head_label = Label(add_window, text='Add contact')
@@ -153,14 +157,104 @@ def add_contact_to_list(event):
 
 def add_contact(window, e_name, e_email):
     '''Adds the contact to the sql database'''
+    try:
+        global username
+        name = e_name.get()
+        email = e_email.get()
+        command = 'insert into ' + username + '_contact_info values({}, {})'.format('"' + name + '"', '"' + email + '"')
+        cursor.execute(command)
+        con2.commit()
+        window.destroy()
+    except:
+        print('debug@PyClassInterface: It seems that contact already exists. Please insert a new contact.')
+        window.destroy()
+
+
+def delete_contact(event):
+    '''Pops up a window that deletes the provided contact'''
+    DeleteContactWindow = Tk(screenName='DeleteContactWindow')
+    DeleteContactWindow.wm_iconbitmap('icon.ico')
+    DeleteContactWindow.wm_title('Delete Contact')
+    DeleteContactWindow_hfont = Font(root=DeleteContactWindow, family='product sans bold', size=18)
+    DeleteContactWindow_n_font = Font(root=DeleteContactWindow, family='product sans', size=10)
+    HeadLabel = Label(DeleteContactWindow, text='Delete a contact')
+    HeadLabel.grid(row=0)
+    HeadLabel.configure(font=DeleteContactWindow_hfont)
+    PasswordLabel = Label(DeleteContactWindow, text='Password')
+    PasswordLabel.grid(row=1)
+    PasswordLabel.configure(font=DeleteContactWindow_n_font)
+    PasswordEntry = Entry(DeleteContactWindow)
+    PasswordEntry.grid(row=1, column=1)
+    ContactEmailLabel = Label(DeleteContactWindow, text='Contact Email')
+    ContactEmailLabel.grid(row=2)
+    ContactEmailLabel.configure(font=DeleteContactWindow_n_font)
+    ContactEmailEntry = Entry(DeleteContactWindow)
+    ContactEmailEntry.grid(row=2, column=1)
+    SubmitButton = Button(DeleteContactWindow, text='Delete')
+    SubmitButton.bind('<Button-1>', lambda lam_var: delete_contact_from_sql(DeleteContactWindow, PasswordEntry, ContactEmailEntry))
+    SubmitButton.grid(row=3, column=0)
+    SubmitButton.configure(font=DeleteContactWindow_n_font)
+    DeleteContactWindow.mainloop()
+
+
+def delete_contact_from_sql(window, pass_entry, email_entry):
+    '''Deletes contact info from MySQL table'''
+    global password
+    print(username)
+    email = email_entry.get()
+    passwordEntry = pass_entry.get()
+    if passwordEntry == password:
+        delete_command = '''delete from ''' + username + '''_contact_info where email = {}'''
+        delete_command = delete_command.format("'"+email+"'")
+        print(delete_command)
+        cursor.execute(delete_command)
+        print('debug@PyClassInterface: Deletion Successful!')
+        window.destroy()
+    else:
+        print('debug@PyClassInterface: You seem to have entered at least one wrong entry. Please re-check your password and verify the existence of the provided email in your contact list.')
+
+
+def close_account(event):
+    '''receives info to close account'''
+    root.destroy()
+    CloseAccountWindow = Tk(screenName='CloseAccountWindow')
+    CloseAccountWindow.wm_iconbitmap('icon.ico')
+    CloseAccountWindow.wm_title('Close Account')
+    CloseAccountWindow_hfont = Font(root=CloseAccountWindow, family='product sans bold', size=18)
+    CloseAccountWindow_n_font = Font(root=CloseAccountWindow, family='product sans', size=10)
+    HeadLabel = Label(CloseAccountWindow, text='Close account')
+    HeadLabel.grid(row=0)
+    HeadLabel.configure(font=CloseAccountWindow_hfont)
+    PasswordLabel = Label(CloseAccountWindow, text='Password')
+    PasswordLabel.grid(row=1)
+    PasswordLabel.configure(font=CloseAccountWindow_n_font)
+    PasswordEntry = Entry(CloseAccountWindow)
+    PasswordEntry.grid(row=2)
+    WarningLabel = Label(CloseAccountWindow, text='WARNING: Closing this account will permanently delete your data. Proceed with caution.')
+    WarningLabel.grid(row=3)
+    WarningLabel.configure(font=CloseAccountWindow_n_font, fg='#f44242')
+    SubmitButton = Button(CloseAccountWindow, text='Close Account')
+    SubmitButton.bind('<Button-1>', lambda lam_var: delete_account_from_sql(CloseAccountWindow, PasswordEntry))
+    SubmitButton.grid(row=4, column=0)
+    SubmitButton.configure(font=CloseAccountWindow_n_font)
+    CloseAccountWindow.mainloop()
+
+
+def delete_account_from_sql(window, password_entry):
+    '''removes all account data'''
+    global password
     global username
-    name = e_name.get()
-    email = e_email.get()
-    command = 'insert into ' + username + '_contact_info values({}, {})'.format('"' + name + '"', '"' + email + '"')
-    cursor.execute(command)
-    con2.commit()
+    password_entry = password_entry.get()
+    if password_entry == password:
+        con_new = mc.connect(host='localhost', user='root', password='1234', database='')
+        cursor_new = con_new.cursor()
+        cursor_new.execute('use logininfo;')
+        cursor_new.execute('delete from logininfo where uid = "' + username + '";')
+        cursor_new.execute('drop database ' + username + '_contact_info;')
+        cursor_new.close()
     window.destroy()
 
+    
 
 def send(event):
     '''Opens a prompt for the user to select which of his contacts he needs to send the emails to'''
@@ -169,6 +263,8 @@ def send(event):
     emails = []
     variables = []
     send_window = Tk(screenName='SendWindow')
+    send_window.wm_iconbitmap('icon.ico')
+    send_window.wm_title('Send')
     send_hfont = Font(root=send_window, family='product sans bold', size=18)
     send_n_font = Font(root=send_window, family='product sans', size=10)
     send_head_label = Label(send_window, text='Choose your audience:')
@@ -223,6 +319,8 @@ def get_files(window, recipients):
     global folder_path
     global files_to_send
     file_prompt_window = Tk(screenName='file_prompt_window')
+    file_prompt_window.wm_iconbitmap('icon.ico')
+    file_prompt_window.wm_title('Pick Files')
     file_prompt_hfont = Font(root=file_prompt_window, family='product sans bold', size=18)
     file_prompt_n_font = Font(root=file_prompt_window, family='product sans', size=10)
     file_prompt_head_label = Label(file_prompt_window, text='Choose your files:')
@@ -262,9 +360,11 @@ def send_mail(window, recipients, files):
     window.destroy()
 
 
-'''def view(event):
+def view(event):
     root.destroy()
     view_window = Tk(screenName='ViewWindow')
+    view_window.wm_iconbitmap('icon.ico')
+    view_window.wm_title('View Files')
     view_hfont = Font(root=view_window, family='product sans bold', size=18)
     view_n_font = Font(root=view_window, family='product sans', size=10)
     view_head_label = Label(view_window, text="Here's your stuff!")
@@ -273,11 +373,13 @@ def send_mail(window, recipients, files):
     view_info_label = Label(view_window, text='Files you have received through the PyClass interface')
     view_info_label.grid(row=2, column=1)
     view_info_label.configure(font=view_n_font)
-    view_window.mainloop()'''
+    view_window.mainloop()
 
 
 # ----Login Section---- #
 root = Tk(screenName='LoginScreen')
+root.wm_iconbitmap('icon.ico')
+root.wm_title('Login')
 HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)
 HeadLabel = Label(root, text='Login')
@@ -313,6 +415,8 @@ else:
 
 # ----Main Stuff---- #
 root = Tk(screenName='interface')
+root.wm_iconbitmap('icon.ico')
+root.wm_title('PyClass')
 HeadingFont = Font(root=root, family='product sans bold', size=18)
 NormalFont = Font(root=root, family='product sans', size=10)
 con2 = mc.connect(host='localhost', user='root', password='1234', database='')
@@ -328,12 +432,20 @@ SendButton = Button(root, text='Send Files')
 SendButton.pack()
 SendButton.bind('<Button-1>', send)
 SendButton.configure(font=NormalFont)
-'''ViewButton = Button(root, text='View Files')
+ViewButton = Button(root, text='View Files')
 ViewButton.pack()
 ViewButton.bind('<Button-1>', view)
-ViewButton.configure(font=NormalFont)'''
+ViewButton.configure(font=NormalFont)
 AddContactButton = Button(root, text='Add Contact')
 AddContactButton.pack()
 AddContactButton.bind('<Button-1>', add_contact_to_list)
 AddContactButton.configure(font=NormalFont)
+DeleteContactButton = Button(root, text='Delete Contact')
+DeleteContactButton.pack()
+DeleteContactButton.bind('<Button-1>', delete_contact)
+DeleteContactButton.configure(font=NormalFont)
+CloseAccountButton = Button(root, text='Close Account')
+CloseAccountButton.pack()
+CloseAccountButton.bind('<Button-1>', close_account)
+CloseAccountButton.configure(font=NormalFont, fg='#f44242')
 root.mainloop()
